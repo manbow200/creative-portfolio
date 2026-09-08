@@ -1,0 +1,78 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar', { activeTab: 'media', title: 'Media Library Manager' }) %>
+
+<!-- Upload Media -->
+<div class="form-card">
+  <div class="form-card-title">
+    <i class="bi bi-cloud-arrow-up"></i> Upload Media Asset
+  </div>
+  
+  <form action="/admin/media/upload" method="POST" enctype="multipart/form-data">
+    <div class="admin-form-group">
+      <label for="media_file">Choose File *</label>
+      <input type="file" id="media_file" name="media_file" class="admin-input" accept="image/*,video/mp4,application/pdf" required>
+      <span style="font-size: 0.75rem; color: var(--text-admin-muted); margin-top: 5px; display: block;">Supports: JPEG, PNG, WEBP (Images), MP4 (Videos), and PDF (Documents). Limit: 40MB</span>
+    </div>
+
+    <button type="submit" class="admin-btn" style="max-width: 200px;">
+      <i class="bi bi-upload"></i> Upload File
+    </button>
+  </form>
+</div>
+
+<!-- Media Library list -->
+<div class="data-box">
+  <div class="data-box-header">
+    <h3>Media Library</h3>
+  </div>
+
+  <div class="media-gallery-grid">
+    <% if (media.length > 0) { %>
+      <% media.forEach(file => { %>
+        <div class="media-item-box">
+          <div class="media-preview">
+            <% if (file.type.startsWith('image/')) { %>
+              <img src="<%= file.path %>" alt="<%= file.filename %>">
+            <% } else if (file.type.startsWith('video/')) { %>
+              <video src="<%= file.path %>" preload="metadata" style="height: 100%; width: 100%; object-fit: cover;"></video>
+              <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.85rem;">
+                <i class="bi bi-play-fill"></i>
+              </div>
+            <% } else if (file.type.includes('pdf')) { %>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <i class="bi bi-file-pdf" style="font-size: 2.5rem; color: var(--color-danger);"></i>
+                <span style="font-size: 0.7rem; color: var(--text-admin-secondary);">PDF Document</span>
+              </div>
+            <% } else { %>
+              <i class="bi bi-file-earmark"></i>
+            <% } %>
+          </div>
+          
+          <div class="media-details">
+            <div class="media-name" title="<%= file.filename %>"><%= file.filename %></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+              <!-- Action to copy URL -->
+              <button class="admin-btn" style="padding: 4px 8px; font-size: 0.7rem; background: var(--bg-admin-elevated);"
+                onclick="navigator.clipboard.writeText('<%= file.path %>'); alert('Copied file path to clipboard: <%= file.path %>');">
+                <i class="bi bi-clipboard"></i> Copy Path
+              </button>
+
+              <form action="/admin/media/delete/<%= file.id %>" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this file? This action is irreversible.');" style="display: inline;">
+                <button type="submit" class="admin-btn" style="padding: 4px 8px; font-size: 0.7rem; background: var(--color-danger);">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-admin-muted);">
+        <i class="bi bi-folder-plus" style="font-size: 3rem; display: block; margin-bottom: 15px;"></i>
+        <p>No media files uploaded yet. Upload images, videos, or PDF guides to build your library.</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

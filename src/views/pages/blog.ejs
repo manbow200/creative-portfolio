@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav', { activePage: 'blog' }) %>
+
+<section class="about-hero animate-on-scroll" style="padding-bottom: 30px;">
+  <div class="container" style="text-align: center;">
+    <h3 style="color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.1em; font-size: 1.1rem; margin-bottom: 15px;"><%= __('nav_blog') %></h3>
+    <h1 style="font-size: 3rem; margin-bottom: 20px;">Insights & Tutorials</h1>
+    <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+      Read my tutorials and thoughts on Full Stack Web Development, Graphic Designs, UI layouts, and computer diagnostic guides.
+    </p>
+  </div>
+</section>
+
+<section class="blog-section bg-glass" style="border-radius: 0; padding: 40px 0 100px;">
+  <div class="container">
+    
+    <!-- Search Bar -->
+    <form action="/blog" method="GET" class="blog-search-bar animate-on-scroll">
+      <input type="text" name="search" class="form-input" placeholder="Search articles by title, keywords..." value="<%= searchQuery %>">
+      <button type="submit" class="btn btn-primary" style="padding: 12px 20px;"><i class="bi bi-search"></i></button>
+      <% if (searchQuery) { %>
+        <a href="/blog" class="btn btn-secondary" style="padding: 12px 15px;"><i class="bi bi-x-lg"></i></a>
+      <% } %>
+    </form>
+
+    <!-- Blog Grid -->
+    <% if (blogs.length > 0) { %>
+      <div class="blog-grid">
+        <% blogs.forEach(blog => { %>
+          <div class="blog-card bg-glass animate-on-scroll">
+            <div class="blog-img">
+              <img src="<%= blog.image %>" alt="<%= blog.title %>" onerror="this.src='/images/blog-placeholder.jpg'">
+              <span class="blog-category"><%= blog.category %></span>
+            </div>
+            
+            <div class="blog-card-content">
+              <div class="blog-meta">
+                <span><i class="bi bi-calendar3"></i> <%= new Date(blog.created_at).toLocaleDateString(undefined, {year: 'numeric', month: 'short', day: 'numeric'}) %></span>
+                <span><i class="bi bi-clock"></i> <%= blog.readingTime %> min read</span>
+                <span><i class="bi bi-eye"></i> <%= blog.views %> <%= __('views') %></span>
+              </div>
+              
+              <h3><%= blog.title %></h3>
+              <!-- Remove markdown headers/formatting symbols from preview text -->
+              <p><%= blog.content.substring(0, 140).replace(/[*#`]/g, '') %>...</p>
+              
+              <a href="/blog/<%= blog.id %>" class="project-link" style="margin-top: 15px; display: inline-flex;">
+                <%= __('read_more') %> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div style="text-align: center; padding: 80px 20px;" class="bg-glass" style="border-radius: var(--border-radius-md);">
+        <i class="bi bi-bookmark-dash" style="font-size: 4rem; color: var(--text-muted); display: block; margin-bottom: 20px;"></i>
+        <h3>No Articles Found</h3>
+        <p style="color: var(--text-secondary); margin-top: 10px;">No blog posts matched your search criteria. Check back soon!</p>
+        <a href="/blog" class="btn btn-primary" style="margin-top: 25px;">Clear Search Filter</a>
+      </div>
+    <% } %>
+
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,272 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav', { activePage: 'home' }) %>
+
+<!-- 1. HERO / WELCOME SECTION -->
+<section class="hero-section">
+  <div class="hero-glow"></div>
+  <div class="container hero-grid">
+    <div class="hero-content animate-on-scroll">
+      <h3><%= __('hero_greeting') %></h3>
+      <h1 class="text-gradient"><%= settings.profile %></h1>
+      
+      <!-- Professional static roles grid -->
+      <div class="roles-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0 30px;">
+        <span class="role-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-primary); padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em;">Full Stack Developer</span>
+        <span class="role-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-primary); padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em;">UI/UX Designer</span>
+        <span class="role-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-primary); padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em;">Graphic Designer</span>
+        <span class="role-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-primary); padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em;">IT Support Specialist</span>
+        <span class="role-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-primary); padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em;">Social Media Manager</span>
+        <span class="role-badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-primary); padding: 8px 16px; border-radius: 30px; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em;">Digital Creator</span>
+      </div>
+
+      <p><%= settings.about_text %></p>
+      
+      <div class="hero-btns">
+        <a href="#contact" class="btn btn-primary"><%= __('btn_hire') %></a>
+        <a href="/portfolio" class="btn btn-secondary"><%= __('btn_portfolio') %></a>
+        <a href="/download-cv" class="btn btn-secondary"><i class="bi bi-download"></i> <%= __('btn_cv') %></a>
+      </div>
+
+      <div class="hero-socials">
+        <span>Follow Me</span>
+        <% if (settings.social_links) { %>
+          <% for (const [platform, url] of Object.entries(settings.social_links)) { %>
+            <% if (url) { %>
+              <a href="<%= url %>" target="_blank" rel="noopener noreferrer" class="social-icon" title="<%= platform %>">
+                <i class="bi bi-<%= platform === 'twitter' ? 'twitter-x' : platform %>"></i>
+              </a>
+            <% } %>
+          <% } %>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="hero-media animate-on-scroll">
+      <div class="hero-img-frame">
+        <img src="<%= settings.logo || '/images/logo.png' %>" alt="<%= settings.profile %> Profile" onerror="this.src='/images/avatar-placeholder.png'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. SERVICES OVERVIEW SECTION -->
+<section id="services" class="services-section bg-glass" style="border-radius: 0;">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2><%= __('sec_services') %></h2>
+      <p><%= __('sec_services_sub') %></p>
+    </div>
+
+    <div class="services-grid">
+      <% services.forEach(service => { %>
+        <div class="service-card bg-glass animate-on-scroll">
+          <div class="service-icon">
+            <i class="bi <%= service.icon || 'bi-gear' %>"></i>
+          </div>
+          <h3><%= service.title %></h3>
+          <p><%= service.description %></p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- 3. FEATURED PORTFOLIO PROJECTS -->
+<section id="portfolio" class="portfolio-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2><%= __('sec_portfolio') %></h2>
+      <p><%= __('sec_portfolio_sub') %></p>
+    </div>
+
+    <div class="portfolio-grid">
+      <% projects.forEach(project => { %>
+        <div class="portfolio-card bg-glass animate-on-scroll" data-category="<%= project.category %>">
+          <div class="project-img-wrapper">
+            <img src="<%= project.image %>" alt="<%= project.title %>" onerror="this.src='/images/placeholder.jpg'">
+            <span class="project-overlay"><%= project.category %></span>
+          </div>
+          <div class="project-content">
+            <h3><%= project.title %></h3>
+            <p><%= project.description %></p>
+            <div class="project-footer">
+              <span class="project-tech"><%= project.technologies %></span>
+              <a href="/portfolio/<%= project.id %>" class="project-link">
+                <%= __('view_details') %> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div style="text-align: center; margin-top: 50px;" class="animate-on-scroll">
+      <a href="/portfolio" class="btn btn-primary"><%= __('btn_portfolio') %></a>
+    </div>
+  </div>
+</section>
+
+<!-- 4. CLIENT TESTIMONIALS REVIEWS -->
+<% if (testimonials.length > 0) { %>
+  <section class="testimonials-section bg-glass" style="border-radius: 0;">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2><%= __('sec_testimonials') %></h2>
+        <p><%= __('sec_testimonials_sub') %></p>
+      </div>
+
+      <div class="testimonials-container animate-on-scroll">
+        <!-- Simple Carousel Slides -->
+        <div class="testimonial-slider" style="position: relative; overflow: hidden;">
+          <% testimonials.forEach((t, idx) => { %>
+            <div class="testimonial-slide testimonial-card bg-glass" style="display: <%= idx === 0 ? 'block' : 'none' %>;">
+              <p>"<%= t.message %>"</p>
+              <div class="testimonial-user">
+                <img src="<%= t.image %>" alt="<%= t.name %>" onerror="this.src='/images/avatar-placeholder.png'">
+                <div style="text-align: left;">
+                  <h4><%= t.name %></h4>
+                  <span><%= t.company %></span>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+          
+          <% if (testimonials.length > 1) { %>
+            <div class="slider-controls" style="display: flex; justify-content: center; gap: 15px; margin-top: 30px;">
+              <button onclick="prevSlide()" class="btn btn-secondary" style="padding: 8px 15px;"><i class="bi bi-chevron-left"></i></button>
+              <button onclick="nextSlide()" class="btn btn-secondary" style="padding: 8px 15px;"><i class="bi bi-chevron-right"></i></button>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let currentSlideIdx = 0;
+    const slides = document.querySelectorAll('.testimonial-slide');
+    
+    function showSlide(idx) {
+      slides.forEach(s => s.style.display = 'none');
+      slides[idx].style.display = 'block';
+    }
+    
+    function nextSlide() {
+      currentSlideIdx = (currentSlideIdx + 1) % slides.length;
+      showSlide(currentSlideIdx);
+    }
+    
+    function prevSlide() {
+      currentSlideIdx = (currentSlideIdx - 1 + slides.length) % slides.length;
+      showSlide(currentSlideIdx);
+    }
+    
+    // Auto slide every 8s
+    setInterval(nextSlide, 8000);
+  </script>
+<% } %>
+
+<!-- 5. INSIGHTS & BLOG PREVIEW -->
+<% if (blogs.length > 0) { %>
+  <section class="blog-section">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <h2><%= __('sec_blog') %></h2>
+        <p><%= __('sec_blog_sub') %></p>
+      </div>
+
+      <div class="blog-grid">
+        <% blogs.forEach(blog => { %>
+          <div class="blog-card bg-glass animate-on-scroll">
+            <div class="blog-img">
+              <img src="<%= blog.image %>" alt="<%= blog.title %>" onerror="this.src='/images/blog-placeholder.jpg'">
+              <span class="blog-category"><%= blog.category %></span>
+            </div>
+            <div class="blog-card-content">
+              <div class="blog-meta">
+                <span><i class="bi bi-calendar3"></i> <%= new Date(blog.created_at).toLocaleDateString() %></span>
+                <span><i class="bi bi-eye"></i> <%= blog.views %> <%= __('views') %></span>
+              </div>
+              <h3><%= blog.title %></h3>
+              <p><%= blog.content.substring(0, 150).replace(/[*#`]/g, '') %>...</p>
+              <a href="/blog/<%= blog.id %>" class="project-link" style="margin-top: 15px; display: inline-flex;">
+                <%= __('read_more') %> <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+<% } %>
+
+<!-- 6. CONTACT SECTION -->
+<section id="contact" class="contact-section bg-glass" style="border-radius: 0;">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2><%= __('sec_contact') %></h2>
+      <p><%= __('sec_contact_sub') %></p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info-box animate-on-scroll">
+        <div class="contact-info-item bg-glass">
+          <div class="contact-info-icon"><i class="bi bi-envelope"></i></div>
+          <div class="contact-info-text">
+            <h4><%= __('contact_email') %></h4>
+            <p><%= settings.email %></p>
+          </div>
+        </div>
+
+        <div class="contact-info-item bg-glass">
+          <div class="contact-info-icon"><i class="bi bi-telephone"></i></div>
+          <div class="contact-info-text">
+            <h4><%= __('contact_phone') %></h4>
+            <p><%= settings.phone %></p>
+          </div>
+        </div>
+
+        <div class="contact-info-item bg-glass">
+          <div class="contact-info-icon"><i class="bi bi-geo-alt"></i></div>
+          <div class="contact-info-text">
+            <h4>Office Location</h4>
+            <p>Dar es Salaam, Tanzania</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-box bg-glass animate-on-scroll">
+        <form id="contact-form" action="/contact" method="POST">
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="name"><%= __('contact_name') %> *</label>
+              <input type="text" id="name" name="name" class="form-input" required placeholder="Evance Dionis">
+            </div>
+            <div class="form-group">
+              <label for="email"><%= __('contact_email') %> *</label>
+              <input type="email" id="email" name="email" class="form-input" required placeholder="name@example.com">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone"><%= __('contact_phone') %></label>
+            <input type="text" id="phone" name="phone" class="form-input" placeholder="+255 611 542 524">
+          </div>
+
+          <div class="form-group">
+            <label for="message"><%= __('contact_message') %> *</label>
+            <textarea id="message" name="message" class="form-input" required placeholder="Write your message here..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            <i class="bi bi-send"></i> <%= __('contact_submit') %>
+          </button>
+          
+          <div id="form-feedback" class="form-feedback"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

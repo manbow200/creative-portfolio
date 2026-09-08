@@ -1,0 +1,80 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav', { activePage: 'portfolio' }) %>
+
+<section class="about-hero animate-on-scroll" style="padding-bottom: 30px;">
+  <div class="container" style="text-align: center;">
+    <h3 style="color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.1em; font-size: 1.1rem; margin-bottom: 15px;"><%= __('nav_portfolio') %></h3>
+    <h1 style="font-size: 3rem; margin-bottom: 20px;">Creative Tech Portfolio</h1>
+    <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+      Explore my web builds, vectors designs, user interfaces mockup, and computer maintenance project logs.
+    </p>
+  </div>
+</section>
+
+<!-- Filter Gallery & Search -->
+<section class="portfolio-section bg-glass" style="border-radius: 0; padding: 40px 0 100px;">
+  <div class="container">
+    
+    <!-- Search and Filters Bar -->
+    <div style="margin-bottom: 50px;">
+      <form action="/portfolio" method="GET" class="blog-search-bar" style="max-width: 600px; margin-bottom: 30px;">
+        <input type="text" name="search" class="form-input" placeholder="Search projects by title, tech..." value="<%= searchQuery %>">
+        <button type="submit" class="btn btn-primary" style="padding: 12px 20px;"><i class="bi bi-search"></i></button>
+        <% if (searchQuery || selectedCategory) { %>
+          <a href="/portfolio" class="btn btn-secondary" style="padding: 12px 15px;"><i class="bi bi-x-lg"></i></a>
+        <% } %>
+      </form>
+
+      <div class="portfolio-filters">
+        <button class="filter-btn <%= !selectedCategory ? 'active' : '' %>" data-filter="all"><%= __('label_all') %></button>
+        <button class="filter-btn <%= selectedCategory === 'Web Development' ? 'active' : '' %>" data-filter="Web Development">Web Dev</button>
+        <button class="filter-btn <%= selectedCategory === 'Graphic Design' ? 'active' : '' %>" data-filter="Graphic Design">Graphics</button>
+        <button class="filter-btn <%= selectedCategory === 'UI/UX Design' ? 'active' : '' %>" data-filter="UI/UX Design">UI/UX</button>
+        <button class="filter-btn <%= selectedCategory === 'Computer Repair' ? 'active' : '' %>" data-filter="Computer Repair">IT Support</button>
+        <button class="filter-btn <%= selectedCategory === 'Social Media' ? 'active' : '' %>" data-filter="Social Media">Social Media</button>
+      </div>
+    </div>
+
+    <!-- Grid items -->
+    <% if (projects.length > 0) { %>
+      <div class="portfolio-grid">
+        <% projects.forEach(project => { %>
+          <div class="portfolio-card bg-glass animate-on-scroll" data-category="<%= project.category %>">
+            <div class="project-img-wrapper">
+              <img src="<%= project.image %>" alt="<%= project.title %>" onerror="this.src='/images/placeholder.jpg'">
+              <span class="project-overlay"><%= project.category %></span>
+            </div>
+            
+            <div class="project-content">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="bi bi-eye"></i> <%= project.views %> <%= __('views') %></span>
+                <% if (project.completion_date) { %>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="bi bi-calendar-event"></i> <%= new Date(project.completion_date).toLocaleDateString(undefined, {year: 'numeric', month: 'short'}) %></span>
+                <% } %>
+              </div>
+              <h3><%= project.title %></h3>
+              <p><%= project.description %></p>
+              
+              <div class="project-footer">
+                <span class="project-tech" title="<%= project.technologies %>"><%= project.technologies %></span>
+                <a href="/portfolio/<%= project.id %>" class="project-link">
+                  <%= __('view_details') %> <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div style="text-align: center; padding: 80px 20px;" class="bg-glass" style="border-radius: var(--border-radius-md);">
+        <i class="bi bi-folder-x" style="font-size: 4rem; color: var(--text-muted); display: block; margin-bottom: 20px;"></i>
+        <h3>No Projects Found</h3>
+        <p style="color: var(--text-secondary); margin-top: 10px;">Try clearing filters or running a different search query.</p>
+        <a href="/portfolio" class="btn btn-primary" style="margin-top: 25px;">View All Projects</a>
+      </div>
+    <% } %>
+
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

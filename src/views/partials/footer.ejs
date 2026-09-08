@@ -1,0 +1,57 @@
+<footer>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <h3><%= settings.profile %></h3>
+      <p><%= __('hero_intro') %></p>
+      <p style="margin-top: 15px; font-size: 0.85rem;"><i class="bi bi-geo-alt-fill text-gradient"></i> Dar es Salaam, Tanzania</p>
+    </div>
+    
+    <div class="footer-links">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="/"><%= __('nav_home') %></a></li>
+        <li><a href="/about"><%= __('nav_about') %></a></li>
+        <li><a href="/services"><%= __('nav_services') %></a></li>
+        <li><a href="/portfolio"><%= __('nav_portfolio') %></a></li>
+        <li><a href="/blog"><%= __('nav_blog') %></a></li>
+      </ul>
+    </div>
+
+    <div class="footer-links">
+      <h4>Connect With Me</h4>
+      <div class="hero-socials" style="margin-top: 10px;">
+        <% if (settings.social_links) { %>
+          <% for (const [platform, url] of Object.entries(settings.social_links)) { %>
+            <% if (url) { %>
+              <a href="<%= url %>" target="_blank" rel="noopener noreferrer" class="social-icon" title="<%= platform %>">
+                <i class="bi bi-<%= platform === 'twitter' ? 'twitter-x' : platform %>"></i>
+              </a>
+            <% } %>
+          <% } %>
+        <% } %>
+      </div>
+      <p style="margin-top: 25px; font-size: 0.85rem;"><i class="bi bi-envelope-fill"></i> <%= settings.email %></p>
+      <p style="font-size: 0.85rem;"><i class="bi bi-telephone-fill"></i> <%= settings.phone %></p>
+    </div>
+  </div>
+  
+  <div class="container footer-bottom">
+    <p>&copy; <%= new Date().getFullYear() %> <%= settings.profile %>. All Rights Reserved.</p>
+    <p>Powered by Evance CMS Platform</p>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp Widget -->
+<% 
+  // Clean phone number from spaces and symbols for wa.me API
+  const cleanPhone = settings.phone ? settings.phone.replace(/[^0-9+]/g, '') : '+255611542524';
+  const waUrl = `https://wa.me/${cleanPhone.replace('+', '')}?text=Hello%20Evance,%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project!`;
+%>
+<a href="<%= waUrl %>" target="_blank" rel="noopener noreferrer" class="whatsapp-chat-float" id="whatsapp-float" title="<%= __('contact_whatsapp') %>">
+  <i class="bi bi-whatsapp"></i>
+</a>
+
+<!-- Main Client Javascript -->
+<script src="/js/main.js"></script>
+</body>
+</html>

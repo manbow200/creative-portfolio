@@ -1,0 +1,179 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav', { activePage: 'about' }) %>
+
+<!-- ABOUT SUMMARY HERO -->
+<section class="about-hero animate-on-scroll">
+  <div class="container about-grid">
+    <div class="about-bio">
+      <h3 style="color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.1em; font-size: 1.1rem; margin-bottom: 15px;"><%= __('about_journey') %></h3>
+      <h2><%= __('about_title') %></h2>
+      <p style="font-size: 1.15rem; font-weight: 500; color: var(--text-primary); margin-bottom: 25px;"><%= settings.about_text %></p>
+      <p><%= settings.journey_text %></p>
+      
+      <div class="about-details">
+        <div class="about-detail-item">
+          <strong style="color: var(--accent-primary);"><%= __('client') %>:</strong> Freelancers & Agencies
+        </div>
+        <div class="about-detail-item">
+          <strong style="color: var(--accent-primary);">Email:</strong> <%= settings.email %>
+        </div>
+        <div class="about-detail-item">
+          <strong style="color: var(--accent-primary);">Phone:</strong> <%= settings.phone %>
+        </div>
+        <div class="about-detail-item">
+          <strong style="color: var(--accent-primary);">Residence:</strong> Dar es Salaam, TZ
+        </div>
+      </div>
+
+      <div style="margin-top: 35px;">
+        <a href="/download-cv" class="btn btn-primary"><i class="bi bi-download"></i> <%= __('btn_cv') %></a>
+      </div>
+    </div>
+    
+    <div class="about-goals bg-glass" style="padding: 40px; border-radius: var(--border-radius-lg); align-self: center;">
+      <h3 style="font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--accent-cyan);">
+        <i class="bi bi-bullseye"></i> <%= __('about_goals') %>
+      </h3>
+      <p style="line-height: 1.7;"><%= settings.goals_text %></p>
+      
+      <blockquote style="margin-top: 25px; padding-left: 20px; border-left: 3px solid var(--accent-secondary); font-style: italic; color: var(--text-secondary);">
+        "The best way to predict the future is to create it, blending design logic with robust code architecture."
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE & EDUCATION TIMELINES -->
+<section class="timeline-section bg-glass" style="border-radius: 0;">
+  <div class="container timeline-grid">
+    <!-- Experience -->
+    <div class="animate-on-scroll">
+      <h3 class="timeline-title"><i class="bi bi-briefcase text-gradient"></i> <%= __('about_experience') %></h3>
+      <div class="timeline">
+        <% if (settings.experience_text && settings.experience_text.length > 0) { %>
+          <% settings.experience_text.forEach(item => { %>
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-date"><%= item.year %></div>
+              <h4><%= item.role %></h4>
+              <h5><%= item.company %></h5>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No experiences added yet.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="animate-on-scroll">
+      <h3 class="timeline-title"><i class="bi bi-mortarboard text-gradient"></i> <%= __('about_education') %></h3>
+      <div class="timeline">
+        <% if (settings.education_text && settings.education_text.length > 0) { %>
+          <% settings.education_text.forEach(item => { %>
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-date"><%= item.year %></div>
+              <h4><%= item.degree %></h4>
+              <h5><%= item.school %></h5>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No education history added yet.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS PROGRESS ANIMATIONS -->
+<section class="skills-section">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2><%= __('about_skills') %></h2>
+      <p>My technical expertise benchmarks across core specialties</p>
+    </div>
+
+    <div class="skills-grid">
+      <!-- Group 1: Coding -->
+      <div class="skill-group bg-glass animate-on-scroll">
+        <h3 style="font-size: 1.25rem; margin-bottom: 25px; color: var(--accent-cyan); display: flex; align-items: center; gap: 10px;">
+          <i class="bi bi-code-slash"></i> Web Development
+        </h3>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>JavaScript / Node.js</span><span>90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="90"></div></div>
+        </div>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Express & REST APIs</span><span>92%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="92"></div></div>
+        </div>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Databases (MySQL / SQLite)</span><span>88%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="88"></div></div>
+        </div>
+      </div>
+
+      <!-- Group 2: Graphic & UI Design -->
+      <div class="skill-group bg-glass animate-on-scroll">
+        <h3 style="font-size: 1.25rem; margin-bottom: 25px; color: var(--accent-primary); display: flex; align-items: center; gap: 10px;">
+          <i class="bi bi-palette"></i> Design & UI/UX
+        </h3>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Vector Illustrations & Logos</span><span>85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="85"></div></div>
+        </div>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Figma UI/UX Mockups</span><span>80%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="80"></div></div>
+        </div>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Flyers & Social Branding</span><span>90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="90"></div></div>
+        </div>
+      </div>
+
+      <!-- Group 3: Hardware & IT Support -->
+      <div class="skill-group bg-glass animate-on-scroll">
+        <h3 style="font-size: 1.25rem; margin-bottom: 25px; color: var(--accent-secondary); display: flex; align-items: center; gap: 10px;">
+          <i class="bi bi-cpu"></i> IT Support & Repair
+        </h3>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Operating Systems (Win/Linux)</span><span>95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="95"></div></div>
+        </div>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Hardware Troubleshooting</span><span>92%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="92"></div></div>
+        </div>
+        <div class="skill-bar-wrapper">
+          <div class="skill-info"><span>Software Deployments & Networks</span><span>85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-percent="85"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS MATRIX -->
+<section class="tools-section bg-glass" style="border-radius: 0; padding: 80px 0;">
+  <div class="container">
+    <div class="section-header animate-on-scroll">
+      <h2><%= __('about_tools') %></h2>
+      <p>Essential software, terminals, and engines I use daily</p>
+    </div>
+
+    <div class="tools-grid animate-on-scroll">
+      <div class="tool-item bg-glass"><i class="bi bi-code"></i>VS Code</div>
+      <div class="tool-item bg-glass"><i class="bi bi-figma"></i>Figma</div>
+      <div class="tool-item bg-glass"><i class="bi bi-terminal"></i>Terminal</div>
+      <div class="tool-item bg-glass"><i class="bi bi-git"></i>Git</div>
+      <div class="tool-item bg-glass"><i class="bi bi-database"></i>MySQL</div>
+      <div class="tool-item bg-glass"><i class="bi bi-bootstrap"></i>Bootstrap</div>
+      <div class="tool-item bg-glass"><i class="bi bi-cpu-fill"></i>Hardware Tool</div>
+      <div class="tool-item bg-glass"><i class="bi bi-image"></i>Photoshop</div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

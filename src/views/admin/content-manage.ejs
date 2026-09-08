@@ -1,0 +1,162 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar', { activeTab: 'settings', title: 'Content & Settings Management' }) %>
+
+<div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; align-items: start;">
+  
+  <!-- Left Side: Profile, About text, Socials -->
+  <div class="form-card">
+    <div class="form-card-title">
+      <i class="bi bi-person-lines-fill"></i> Update Professional Profile Details
+    </div>
+    
+    <form action="/admin/settings/update" method="POST" enctype="multipart/form-data">
+      <div class="form-grid-2">
+        <div class="admin-form-group">
+          <label for="profile">Full Name *</label>
+          <input type="text" id="profile" name="profile" class="admin-input" required value="<%= settings.profile %>">
+        </div>
+        <div class="admin-form-group">
+          <label for="email">Public Contact Email *</label>
+          <input type="email" id="email" name="email" class="admin-input" required value="<%= settings.email %>">
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="phone">Contact Phone Number *</label>
+        <input type="text" id="phone" name="phone" class="admin-input" required value="<%= settings.phone %>">
+      </div>
+
+      <div class="admin-form-group">
+        <label for="logo">Replace Profile Avatar Image (JPEG, PNG, WEBP)</label>
+        <input type="file" id="logo" name="logo" class="admin-input" accept="image/*">
+        <% if (settings.logo) { %>
+          <span style="font-size: 0.75rem; color: var(--text-admin-secondary); margin-top: 5px; display: block;">Current: <a href="<%= settings.logo %>" target="_blank" style="color: var(--color-primary);"><%= settings.logo.split('/').pop() %></a></span>
+        <% } %>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="about_text">Hero Summary / Intro Biography *</label>
+        <textarea id="about_text" name="about_text" class="admin-input" required style="min-height: 90px;"><%= settings.about_text %></textarea>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="journey_text">Detailed Professional Journey / Story</label>
+        <textarea id="journey_text" name="journey_text" class="admin-input" style="min-height: 120px;"><%= settings.journey_text %></textarea>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="goals_text">Career Goals & Professional Vision</label>
+        <textarea id="goals_text" name="goals_text" class="admin-input" style="min-height: 90px;"><%= settings.goals_text %></textarea>
+      </div>
+
+      <h3 style="font-size: 1.1rem; margin: 30px 0 15px; border-bottom: 1px solid var(--border-admin); padding-bottom: 10px; font-family: var(--font-heading); color: var(--color-primary);">Social Network Links</h3>
+      <div class="form-grid-2">
+        <div class="admin-form-group">
+          <label for="github">GitHub URL</label>
+          <input type="url" id="github" name="github" class="admin-input" placeholder="https://github.com/..." value="<%= socials.github || '' %>">
+        </div>
+        <div class="admin-form-group">
+          <label for="linkedin">LinkedIn URL</label>
+          <input type="url" id="linkedin" name="linkedin" class="admin-input" placeholder="https://linkedin.com/in/..." value="<%= socials.linkedin || '' %>">
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="admin-form-group">
+          <label for="instagram">Instagram URL</label>
+          <input type="url" id="instagram" name="instagram" class="admin-input" placeholder="https://instagram.com/..." value="<%= socials.instagram || '' %>">
+        </div>
+        <div class="admin-form-group">
+          <label for="twitter">Twitter / X URL</label>
+          <input type="url" id="twitter" name="twitter" class="admin-input" placeholder="https://twitter.com/..." value="<%= socials.twitter || '' %>">
+        </div>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="facebook">Facebook URL</label>
+        <input type="url" id="facebook" name="facebook" class="admin-input" placeholder="https://facebook.com/..." value="<%= socials.facebook || '' %>">
+      </div>
+
+      <button type="submit" class="admin-btn" style="max-width: 250px;">
+        <i class="bi bi-save"></i> Save Settings & Content
+      </button>
+    </form>
+  </div>
+
+  <!-- Right Side: Credentials & Backup downloads -->
+  <div style="display: flex; flex-direction: column; gap: 25px;">
+    
+    <!-- CV Manager Card -->
+    <div class="form-card" style="border-color: var(--color-primary);">
+      <div class="form-card-title" style="color: var(--color-primary);">
+        <i class="bi bi-file-earmark-pdf"></i> Curriculum Vitae (CV) Manager
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-admin-secondary); line-height: 1.5; margin-bottom: 20px;">
+        Upload a professional PDF document. Visitors will be able to download this file when clicking the "Download CV" button on the homepage.
+      </p>
+      
+      <form action="/admin/settings/cv" method="POST" enctype="multipart/form-data">
+        <div class="admin-form-group">
+          <label for="cv_file_dedicated">Choose CV File (PDF only) *</label>
+          <input type="file" id="cv_file_dedicated" name="cv_file" class="admin-input" accept="application/pdf" required>
+        </div>
+        
+        <% if (settings.cv_url) { %>
+          <div style="margin-bottom: 20px; font-size: 0.85rem; color: var(--color-primary);">
+            <i class="bi bi-file-check"></i> Current CV: <a href="/download-cv" target="_blank" style="color: var(--color-primary); text-decoration: underline;">Download CV Document</a>
+          </div>
+        <% } %>
+
+        <button type="submit" class="admin-btn">
+          <i class="bi bi-upload"></i> Upload & Replace CV
+        </button>
+      </form>
+    </div>
+    
+    <!-- Password Card -->
+    <div class="form-card" style="border-color: var(--color-warning);">
+      <div class="form-card-title" style="color: var(--color-warning);">
+        <i class="bi bi-shield-lock"></i> Change Security Credentials
+      </div>
+      
+      <form action="/admin/settings/password" method="POST">
+        <div class="admin-form-group">
+          <label for="current_password">Current Password *</label>
+          <input type="password" id="current_password" name="current_password" class="admin-input" required>
+        </div>
+        
+        <div class="admin-form-group">
+          <label for="new_password">New Password *</label>
+          <input type="password" id="new_password" name="new_password" class="admin-input" required>
+        </div>
+        
+        <div class="admin-form-group">
+          <label for="confirm_password">Confirm New Password *</label>
+          <input type="password" id="confirm_password" name="confirm_password" class="admin-input" required>
+        </div>
+
+        <button type="submit" class="admin-btn" style="background: var(--color-warning); color: #000;">
+          <i class="bi bi-key"></i> Update Password
+        </button>
+      </form>
+    </div>
+
+    <!-- Backup Systems Card -->
+    <div class="form-card" style="border-color: var(--color-success);">
+      <div class="form-card-title" style="color: var(--color-success);">
+        <i class="bi bi-database-down"></i> Backup & Disaster Recovery
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-admin-secondary); line-height: 1.5; margin-bottom: 20px;">
+        Export all database tables containing settings, projects metadata, services details, client reviews, and blogs into a single downloadable JSON object file.
+      </p>
+      
+      <a href="/admin/backup/download" class="admin-btn" style="background: var(--color-success); color: #fff; text-align: center; text-decoration: none; display: block;">
+        <i class="bi bi-cloud-download"></i> Download database backup (.json)
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>

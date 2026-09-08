@@ -1,0 +1,50 @@
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon" style="width: 30px; height: 30px; font-size: 0.95rem;">E</div>
+    <span>Evance CMS</span>
+  </div>
+  
+  <ul class="sidebar-menu">
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'dashboard' ? 'active' : '' %>">
+      <a href="/admin"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'portfolio' ? 'active' : '' %>">
+      <a href="/admin/portfolio"><i class="bi bi-folder2-open"></i> Portfolio</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'blog' ? 'active' : '' %>">
+      <a href="/admin/blog"><i class="bi bi-journal-text"></i> Blog Posts</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'services' ? 'active' : '' %>">
+      <a href="/admin/services"><i class="bi bi-gear"></i> Services</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'testimonials' ? 'active' : '' %>">
+      <a href="/admin/testimonials"><i class="bi bi-star"></i> Testimonials</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'messages' ? 'active' : '' %>">
+      <a href="/admin/messages"><i class="bi bi-envelope"></i> Messages Inbox</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'media' ? 'active' : '' %>">
+      <a href="/admin/media"><i class="bi bi-images"></i> Media Library</a>
+    </li>
+    <li class="<%= typeof activeTab !== 'undefined' && activeTab === 'settings' ? 'active' : '' %>">
+      <a href="/admin/settings"><i class="bi bi-sliders"></i> Site Settings</a>
+    </li>
+    <li style="margin-top: auto;">
+      <a href="/admin/logout" style="color: var(--color-danger);"><i class="bi bi-box-arrow-left"></i> Logout</a>
+    </li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <p>User: <strong><%= adminUser %></strong></p>
+    <p style="font-size: 0.75rem; margin-top: 5px;">v1.0.0 Stable</p>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="admin-header">
+    <h1><%= title %></h1>
+    <div class="admin-user-profile">
+      <span>Welcome, <strong><%= adminUser %></strong></span>
+      <img src="<%= adminSettings.logo || '/images/logo.png' %>" onerror="this.src='/images/avatar-placeholder.png'" alt="Admin Avatar">
+    </div>
+  </div>

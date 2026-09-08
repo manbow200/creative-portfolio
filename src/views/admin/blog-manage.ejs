@@ -1,0 +1,145 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar', { activeTab: 'blog', title: 'Blog Management' }) %>
+
+<!-- Add Blog Panel -->
+<div class="form-card">
+  <div class="form-card-title">
+    <i class="bi bi-journal-plus"></i> Write New Blog Article
+  </div>
+  
+  <form action="/admin/blog/add" method="POST" enctype="multipart/form-data">
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="title">Article Title *</label>
+        <input type="text" id="title" name="title" class="admin-input" required placeholder="Optimizing Node.js Performance">
+      </div>
+      <div class="admin-form-group">
+        <label for="category">Category *</label>
+        <select id="category" name="category" class="admin-input" required>
+          <option value="Technology">Technology</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Computer Maintenance">Computer Maintenance</option>
+          <option value="Tutorials">Tutorials</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label for="image">Article Cover Image *</label>
+      <input type="file" id="image" name="image" class="admin-input" accept="image/*" required>
+    </div>
+
+    <div class="admin-form-group">
+      <label for="content">Article Content (Markdown Supported) *</label>
+      <textarea id="content" name="content" class="admin-input" required style="min-height: 250px;" placeholder="Write your post here. You can use standard Markdown like # headers, **bold**, and `code` blocks..."></textarea>
+    </div>
+
+    <button type="submit" class="admin-btn" style="max-width: 200px;">
+      <i class="bi bi-journal-check"></i> Publish Article
+    </button>
+  </form>
+</div>
+
+<!-- Blogs list table -->
+<div class="data-box">
+  <div class="data-box-header">
+    <h3>Existing Blog Articles</h3>
+    <input type="text" id="table-search" class="admin-input" placeholder="Filter articles..." style="max-width: 250px; padding: 6px 12px; font-size: 0.85rem;">
+  </div>
+  <div class="table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Article Title</th>
+          <th>Category</th>
+          <th>Views</th>
+          <th>Date Published</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (blogs.length > 0) { %>
+          <% blogs.forEach(b => { %>
+            <tr>
+              <td>
+                <img src="<%= b.image %>" alt="<%= b.title %>" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;" onerror="this.src='/images/blog-placeholder.jpg'">
+              </td>
+              <td><strong><%= b.title %></strong></td>
+              <td><span class="badge badge-success"><%= b.category %></span></td>
+              <td style="font-weight: 600;"><i class="bi bi-eye"></i> <%= b.views %></td>
+              <td style="font-size: 0.8rem; color: var(--text-admin-secondary);"><%= new Date(b.created_at).toLocaleDateString() %></td>
+              <td style="text-align: right;">
+                <div style="display: inline-flex; gap: 8px;">
+                  <button class="admin-btn" style="padding: 6px 12px; background: var(--color-warning); font-size: 0.8rem;"
+                    onclick="openEditBlogModal(<%= JSON.stringify(b) %>)">
+                    <i class="bi bi-pencil-square"></i> Edit
+                  </button>
+                  
+                  <form action="/admin/blog/delete/<%= b.id %>" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this blog post?');">
+                    <button type="submit" class="admin-btn" style="padding: 6px 12px; background: var(--color-danger); font-size: 0.8rem;">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-admin-muted); padding: 40px;">No articles written yet. Use the form above to publish your first post!</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Edit Blog Modal -->
+<div class="form-card" id="edit-blog-modal" style="display: none; position: fixed; top: 10%; left: 5%; right: 5%; width: 90%; max-height: 80vh; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 50px rgba(0,0,0,0.8); border-color: var(--color-warning);">
+  <div class="form-card-title" style="display: flex; justify-content: space-between; align-items: center;">
+    <span><i class="bi bi-pencil-square"></i> Modify Blog Article</span>
+    <button onclick="closeModal('edit-blog-modal')" class="admin-btn" style="max-width: 50px; background: var(--bg-admin-elevated); padding: 5px;"><i class="bi bi-x-lg"></i></button>
+  </div>
+  
+  <form action="" method="POST" enctype="multipart/form-data">
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="edit-title">Article Title *</label>
+        <input type="text" id="edit-title" name="title" class="admin-input" required>
+      </div>
+      <div class="admin-form-group">
+        <label for="edit-category">Category *</label>
+        <select id="edit-category" name="category" class="admin-input" required>
+          <option value="Technology">Technology</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="Computer Maintenance">Computer Maintenance</option>
+          <option value="Tutorials">Tutorials</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label for="edit-image">Replace Cover Image (Leave blank to keep existing)</label>
+      <input type="file" id="edit-image" name="image" class="admin-input" accept="image/*">
+    </div>
+
+    <div class="admin-form-group">
+      <label for="edit-content">Article Content (Markdown Supported) *</label>
+      <textarea id="edit-content" name="content" class="admin-input" required style="min-height: 250px;"></textarea>
+    </div>
+
+    <div style="display: flex; gap: 15px;">
+      <button type="submit" class="admin-btn" style="max-width: 200px; background: var(--color-warning);">
+        <i class="bi bi-save"></i> Save Article Changes
+      </button>
+      <button type="button" class="admin-btn" style="max-width: 150px; background: var(--bg-admin-elevated);" onclick="closeModal('edit-blog-modal')">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

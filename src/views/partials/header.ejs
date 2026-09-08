@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="<%= currentLang %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Optimization Meta Tags -->
+  <title><%= settings.profile %> | Creative Technology Specialist Portfolio</title>
+  <meta name="description" content="<%= settings.about_text || 'Evance Dionis Chrisostom - Web Developer, UI/UX Designer, IT Support & Graphic Designer.' %>">
+  <meta name="keywords" content="Evance Dionis, Evance Dionis Chrisostom, Web Developer Tanzania, Graphic Designer, IT Support, UI/UX Designer Tanzania, Digital Creator">
+  <meta name="author" content="<%= settings.profile %>">
+
+  <!-- Open Graph / Social Media Sharing Preview Metadata -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= settings.profile %> | Creative Technology Specialist">
+  <meta property="og:description" content="<%= settings.about_text || 'Premium portfolio site showcasing full stack coding, designs, and computer repair services.' %>">
+  <meta property="og:image" content="<%= settings.logo || '/images/logo.png' %>">
+  <meta property="og:url" content="https://evancechrisostom.tech">
+
+  <!-- PWA Manifest & Android Theme Colors -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#090d16">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/images/logo.png">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Anti-Flicker Theme Restore Script -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('light-theme-init');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <script>
+    // Apply class to body before render
+    if (document.documentElement.classList.contains('light-theme-init')) {
+      document.body.classList.add('light-theme');
+      document.documentElement.classList.remove('light-theme-init');
+    }
+  </script>

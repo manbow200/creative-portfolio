@@ -1,0 +1,226 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar', { activeTab: 'portfolio', title: 'Portfolio Management' }) %>
+
+<!-- Add Project Panel (Expandable or standard form card) -->
+<div class="form-card" id="add-project-card">
+  <div class="form-card-title">
+    <i class="bi bi-plus-circle"></i> Add New Portfolio Project
+  </div>
+  
+  <form action="/admin/portfolio/add" method="POST" enctype="multipart/form-data">
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="title">Project Title *</label>
+        <input type="text" id="title" name="title" class="admin-input" required placeholder="E-commerce Web App">
+      </div>
+      <div class="admin-form-group">
+        <label for="category">Category *</label>
+        <select id="category" name="category" class="admin-input" required>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="UI/UX Design">UI/UX Design</option>
+          <option value="Computer Repair">Computer Repair</option>
+          <option value="Social Media">Social Media</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label for="description">Short Description *</label>
+      <textarea id="description" name="description" class="admin-input" required placeholder="Describe the overview of the project..."></textarea>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="technologies">Technologies Used *</label>
+        <input type="text" id="technologies" name="technologies" class="admin-input" required placeholder="Node.js, Express, MySQL, Bootstrap 5">
+      </div>
+      <div class="admin-form-group">
+        <label for="client_info">Client Name</label>
+        <input type="text" id="client_info" name="client_info" class="admin-input" placeholder="ByteCare Agency">
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="image">Cover Image (JPEG, PNG, WEBP) *</label>
+        <input type="file" id="image" name="image" class="admin-input" accept="image/*" required>
+      </div>
+      <div class="admin-form-group">
+        <label for="video_file">Upload MP4 Demo Video OR Video URL</label>
+        <input type="file" id="video_file" name="video_file" class="admin-input" accept="video/mp4" style="margin-bottom: 8px;">
+        <input type="text" id="video_url" name="video_url" class="admin-input" placeholder="Or YouTube Embed Link e.g., https://www.youtube.com/embed/...">
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="website_link">Live Project Link</label>
+        <input type="url" id="website_link" name="website_link" class="admin-input" placeholder="https://demo.com">
+      </div>
+      <div class="admin-form-group">
+        <label for="github_link">GitHub Link</label>
+        <input type="url" id="github_link" name="github_link" class="admin-input" placeholder="https://github.com/...">
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="challenges">Problem / Challenges Faced</label>
+        <textarea id="challenges" name="challenges" class="admin-input" placeholder="Explain the main bottleneck or challenge..."></textarea>
+      </div>
+      <div class="admin-form-group">
+        <label for="solutions">Solution Implemented</label>
+        <textarea id="solutions" name="solutions" class="admin-input" placeholder="Explain how the challenge was resolved..."></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="admin-btn" style="max-width: 200px;">
+      <i class="bi bi-cloud-arrow-up"></i> Upload & Create Project
+    </button>
+  </form>
+</div>
+
+<!-- Projects list table -->
+<div class="data-box">
+  <div class="data-box-header">
+    <h3>Existing Portfolio Projects</h3>
+    <input type="text" id="table-search" class="admin-input" placeholder="Filter projects..." style="max-width: 250px; padding: 6px 12px; font-size: 0.85rem;">
+  </div>
+  <div class="table-responsive">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Project Title</th>
+          <th>Category</th>
+          <th>Tech Stack</th>
+          <th>Views</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (projects.length > 0) { %>
+          <% projects.forEach(p => { %>
+            <tr id="proj-<%= p.id %>">
+              <td>
+                <img src="<%= p.image %>" alt="<%= p.title %>" style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;" onerror="this.src='/images/placeholder.jpg'">
+              </td>
+              <td><strong><%= p.title %></strong></td>
+              <td><span class="badge badge-warning"><%= p.category %></span></td>
+              <td style="font-size: 0.8rem; color: var(--text-admin-secondary);"><%= p.technologies %></td>
+              <td style="font-weight: 600;"><i class="bi bi-eye"></i> <%= p.views %></td>
+              <td style="text-align: right;">
+                <div style="display: inline-flex; gap: 8px;">
+                  <!-- Trigger edit modal -->
+                  <button class="admin-btn" style="padding: 6px 12px; background: var(--color-warning); font-size: 0.8rem;"
+                    onclick="openEditProjectModal(<%= JSON.stringify(p) %>)">
+                    <i class="bi bi-pencil-square"></i> Edit
+                  </button>
+                  
+                  <form action="/admin/portfolio/delete/<%= p.id %>" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this project? This will also remove any uploaded images/videos.');">
+                    <button type="submit" class="admin-btn" style="padding: 6px 12px; background: var(--color-danger); font-size: 0.8rem;">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-admin-muted); padding: 40px;">No projects created yet. Use the form above to add your first work!</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Edit Project Modal -->
+<div class="form-card" id="edit-project-modal" style="display: none; position: fixed; top: 10%; left: 5%; right: 5%; width: 90%; max-height: 80vh; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 50px rgba(0,0,0,0.8); border-color: var(--color-warning);">
+  <div class="form-card-title" style="display: flex; justify-content: space-between; align-items: center;">
+    <span><i class="bi bi-pencil-square"></i> Modify Portfolio Project</span>
+    <button onclick="closeModal('edit-project-modal')" class="admin-btn" style="max-width: 50px; background: var(--bg-admin-elevated); padding: 5px;"><i class="bi bi-x-lg"></i></button>
+  </div>
+  
+  <form action="" method="POST" enctype="multipart/form-data">
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="edit-title">Project Title *</label>
+        <input type="text" id="edit-title" name="title" class="admin-input" required>
+      </div>
+      <div class="admin-form-group">
+        <label for="edit-category">Category *</label>
+        <select id="edit-category" name="category" class="admin-input" required>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphic Design">Graphic Design</option>
+          <option value="UI/UX Design">UI/UX Design</option>
+          <option value="Computer Repair">Computer Repair</option>
+          <option value="Social Media">Social Media</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-form-group">
+      <label for="edit-description">Short Description *</label>
+      <textarea id="edit-description" name="description" class="admin-input" required></textarea>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="edit-technologies">Technologies Used *</label>
+        <input type="text" id="edit-technologies" name="technologies" class="admin-input" required>
+      </div>
+      <div class="admin-form-group">
+        <label for="edit-client_info">Client Name</label>
+        <input type="text" id="edit-client_info" name="client_info" class="admin-input">
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="edit-image">Replace Cover Image (Leave blank to keep existing)</label>
+        <input type="file" id="edit-image" name="image" class="admin-input" accept="image/*">
+      </div>
+      <div class="admin-form-group">
+        <label for="edit-video_file">Replace Demo Video (Leave blank to keep existing)</label>
+        <input type="file" id="edit-video_file" name="video_file" class="admin-input" accept="video/mp4" style="margin-bottom: 8px;">
+        <input type="text" id="edit-video_url" name="video_url" class="admin-input" placeholder="Or YouTube Embed Link">
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="edit-website_link">Live Project Link</label>
+        <input type="url" id="edit-website_link" name="website_link" class="admin-input">
+      </div>
+      <div class="admin-form-group">
+        <label for="edit-github_link">GitHub Link</label>
+        <input type="url" id="edit-github_link" name="github_link" class="admin-input">
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="admin-form-group">
+        <label for="edit-challenges">Problem / Challenges Faced</label>
+        <textarea id="edit-challenges" name="challenges" class="admin-input"></textarea>
+      </div>
+      <div class="admin-form-group">
+        <label for="edit-solutions">Solution Implemented</label>
+        <textarea id="edit-solutions" name="solutions" class="admin-input"></textarea>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 15px;">
+      <button type="submit" class="admin-btn" style="max-width: 200px; background: var(--color-warning);">
+        <i class="bi bi-save"></i> Save Project Changes
+      </button>
+      <button type="button" class="admin-btn" style="max-width: 150px; background: var(--bg-admin-elevated);" onclick="closeModal('edit-project-modal')">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

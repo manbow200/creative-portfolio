@@ -1,0 +1,268 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar', { activeTab: 'dashboard', title: 'Dashboard Overview' }) %>
+
+<!-- Metrics Row -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-info">
+      <h3>Total Visitors</h3>
+      <p><%= stats.totalVisitors %></p>
+      <form action="/admin/analytics/reset" method="POST" onsubmit="return confirm('Are you sure you want to permanently reset all visitor statistics? This will clear logs and reset count to 0.');" style="margin-top: 10px;">
+        <button type="submit" style="background: none; border: none; color: var(--color-danger); font-size: 0.75rem; text-decoration: underline; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 0;">
+          <i class="bi bi-trash"></i> Reset Count
+        </button>
+      </form>
+    </div>
+    <div class="metric-icon"><i class="bi bi-people"></i></div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-info">
+      <h3>Today's Visitors</h3>
+      <p><%= stats.todayVisitors %></p>
+    </div>
+    <div class="metric-icon"><i class="bi bi-person-plus"></i></div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-info">
+      <h3>Monthly Visitors</h3>
+      <p><%= stats.monthlyVisitors %></p>
+    </div>
+    <div class="metric-icon"><i class="bi bi-calendar3"></i></div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-info">
+      <h3>Total Projects</h3>
+      <p><%= stats.totalProjects %></p>
+    </div>
+    <div class="metric-icon"><i class="bi bi-folder-check"></i></div>
+  </div>
+
+  <div class="metric-card alert">
+    <div class="metric-info">
+      <h3>Unread Messages</h3>
+      <p><%= stats.unreadMessages %></p>
+    </div>
+    <div class="metric-icon"><i class="bi bi-chat-left-dots"></i></div>
+  </div>
+
+  <div class="metric-card" style="border-color: var(--color-success);">
+    <div class="metric-info">
+      <h3>Active Now (5m)</h3>
+      <p style="color: var(--color-success);"><%= stats.activeVisitors %></p>
+    </div>
+    <div class="metric-icon" style="color: var(--color-success);"><i class="bi bi-broadcast"></i></div>
+  </div>
+</div>
+
+<!-- Charts Grid -->
+<div class="charts-grid">
+  <!-- Left Chart: Devices & Browsers -->
+  <div class="chart-box">
+    <h3>Visitor Devices Breakdown</h3>
+    <div class="chart-container">
+      <canvas id="deviceChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Right Chart: Traffic Sources -->
+  <div class="chart-box">
+    <h3>Traffic Referrer Sources</h3>
+    <div class="chart-container">
+      <canvas id="sourceChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Lists Grid -->
+<div class="tables-grid">
+  <!-- Popular Pages -->
+  <div class="data-box">
+    <div class="data-box-header">
+      <h3>Popular Pages Views</h3>
+      <span class="badge badge-success"><i class="bi bi-arrow-up-right"></i> Live</span>
+    </div>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Route Path</th>
+            <th style="text-align: right;">Total Hits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (popularPages.length > 0) { %>
+            <% popularPages.forEach(p => { %>
+              <tr>
+                <td><code><%= p.page %></code></td>
+                <td style="text-align: right; font-weight: 600;"><%= p.views %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="2" style="text-align: center; color: var(--text-admin-muted);">No page views logged yet.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Popular Projects -->
+  <div class="data-box">
+    <div class="data-box-header">
+      <h3>Most Viewed Projects</h3>
+      <a href="/admin/portfolio" style="font-size: 0.8rem; color: var(--color-primary); text-decoration: none;">Manage Portfolio</a>
+    </div>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Project Title</th>
+            <th>Category</th>
+            <th style="text-align: right;">Views</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (popularProjects.length > 0) { %>
+            <% popularProjects.forEach(p => { %>
+              <tr>
+                <td><strong><%= p.title %></strong></td>
+                <td><span class="badge badge-warning" style="font-size: 0.7rem;"><%= p.category %></span></td>
+                <td style="text-align: right; font-weight: 600;"><%= p.views %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="3" style="text-align: center; color: var(--text-admin-muted);">No portfolio projects views.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Logs & Recent messages -->
+<div class="tables-grid">
+  <!-- Recent Activity Logs -->
+  <div class="data-box">
+    <div class="data-box-header">
+      <h3>Admin System Logs</h3>
+      <i class="bi bi-clock-history"></i>
+    </div>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Event Action</th>
+            <th>Details Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (recentLogs.length > 0) { %>
+            <% recentLogs.forEach(log => { %>
+              <tr>
+                <td style="font-size: 0.75rem; white-space: nowrap;"><%= new Date(log.created_at).toLocaleString() %></td>
+                <td><span class="badge badge-success" style="font-size: 0.7rem;"><%= log.action %></span></td>
+                <td style="font-size: 0.85rem;"><%= log.details %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="3" style="text-align: center; color: var(--text-admin-muted);">No administrative events logged.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Messages preview -->
+  <div class="data-box">
+    <div class="data-box-header">
+      <h3>Latest Contact Inquiries</h3>
+      <a href="/admin/messages" style="font-size: 0.8rem; color: var(--color-primary); text-decoration: none;">View Inbox</a>
+    </div>
+    <div class="msg-list">
+      <% if (recentMessages.length > 0) { %>
+        <% recentMessages.forEach(msg => { %>
+          <div class="msg-item <%= msg.status === 'unread' ? 'unread' : '' %>" style="padding: 12px 15px;">
+            <div class="msg-item-header">
+              <h4><%= msg.name %></h4>
+              <span class="badge <%= msg.status === 'unread' ? 'badge-warning' : 'badge-success' %>"><%= msg.status %></span>
+            </div>
+            <p style="font-size: 0.8rem; height: 35px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= msg.message %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p style="text-align: center; color: var(--text-admin-muted); padding: 20px;">No messages received.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Chart JS Renderer -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Device Chart
+    const devLabels = <%- JSON.stringify(devices.map(d => d.device)) %>;
+    const devData = <%- JSON.stringify(devices.map(d => d.count)) %>;
+    
+    new Chart(document.getElementById('deviceChart'), {
+      type: 'doughnut',
+      data: {
+        labels: devLabels.length > 0 ? devLabels : ['Desktop'],
+        datasets: [{
+          data: devData.length > 0 ? devData : [1],
+          backgroundColor: ['#6366f1', '#a855f7', '#06b6d4', '#10b981'],
+          borderWidth: 1,
+          borderColor: '#1e293b'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#94a3b8', font: { family: 'Inter' } }
+          }
+        }
+      }
+    });
+
+    // 2. Referrer Sources Chart
+    const srcLabels = <%- JSON.stringify(sources.map(s => s.source)) %>;
+    const srcData = <%- JSON.stringify(sources.map(s => s.count)) %>;
+
+    new Chart(document.getElementById('sourceChart'), {
+      type: 'bar',
+      data: {
+        labels: srcLabels.length > 0 ? srcLabels : ['Direct'],
+        datasets: [{
+          label: 'Views',
+          data: srcData.length > 0 ? srcData : [0],
+          backgroundColor: '#a855f7',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.02)' } }
+        }
+      }
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

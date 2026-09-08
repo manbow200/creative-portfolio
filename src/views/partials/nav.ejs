@@ -1,0 +1,35 @@
+<header>
+  <div class="container navbar">
+    <a href="/" class="logo">
+      <div class="logo-icon">E</div>
+      <span><%= settings.profile.split(' ')[0] %></span>
+    </a>
+    
+    <ul class="nav-links">
+      <li><a href="/" class="<%= typeof activePage !== 'undefined' && activePage === 'home' ? 'active' : '' %>"><%= __('nav_home') %></a></li>
+      <li><a href="/about" class="<%= typeof activePage !== 'undefined' && activePage === 'about' ? 'active' : '' %>"><%= __('nav_about') %></a></li>
+      <li><a href="/services" class="<%= typeof activePage !== 'undefined' && activePage === 'services' ? 'active' : '' %>"><%= __('nav_services') %></a></li>
+      <li><a href="/portfolio" class="<%= typeof activePage !== 'undefined' && activePage === 'portfolio' ? 'active' : '' %>"><%= __('nav_portfolio') %></a></li>
+      <li><a href="/blog" class="<%= typeof activePage !== 'undefined' && activePage === 'blog' ? 'active' : '' %>"><%= __('nav_blog') %></a></li>
+      <li><a href="/#contact" class="<%= typeof activePage !== 'undefined' && activePage === 'contact' ? 'active' : '' %>"><%= __('nav_contact') %></a></li>
+      <li><a href="/admin/login" class="nav-admin-link"><i class="bi bi-shield-lock"></i></a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <!-- Language Switcher dropdown / links -->
+      <a href="?lang=<%= currentLang === 'en' ? 'sw' : 'en' %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" title="Change Language">
+        <i class="bi bi-translate"></i> <%= currentLang === 'en' ? 'SW' : 'EN' %>
+      </a>
+
+      <!-- Light / Dark Mode button -->
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark/Light Mode">
+        <i class="bi bi-moon"></i>
+      </button>
+
+      <!-- Mobile Menu Burger icon -->
+      <button id="burger-menu" class="burger-menu" aria-label="Open Navigation Menu">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+  </div>
+</header>

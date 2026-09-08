@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+<%- include('../partials/nav', { activePage: 'blog' }) %>
+
+<section class="blog-reader-section">
+  <div class="blog-reader-container">
+    
+    <!-- Back button -->
+    <a href="/blog" class="project-link" style="margin-bottom: 30px; display: inline-flex; align-items: center; gap: 8px;">
+      <i class="bi bi-chevron-left"></i> Back to Blog
+    </a>
+
+    <!-- Header Meta -->
+    <div class="blog-reader-header animate-on-scroll">
+      <span class="blog-category" style="position: static; display: inline-block; margin-bottom: 20px;"><%= blog.category %></span>
+      <h1 class="text-gradient"><%= blog.title %></h1>
+      
+      <div class="blog-meta" style="font-size: 0.9rem; margin-top: 15px;">
+        <span><i class="bi bi-calendar3"></i> <%= new Date(blog.created_at).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'}) %></span>
+        <span style="margin: 0 10px;">&bull;</span>
+        <span><i class="bi bi-clock"></i> <%= blog.readingTime %> min read</span>
+        <span style="margin: 0 10px;">&bull;</span>
+        <span><i class="bi bi-eye"></i> <%= blog.views %> views</span>
+      </div>
+    </div>
+
+    <!-- Main Hero Banner -->
+    <div class="blog-reader-hero animate-on-scroll">
+      <img src="<%= blog.image %>" alt="<%= blog.title %>" style="width: 100%; max-height: 450px; object-fit: cover;" onerror="this.src='/images/blog-placeholder.jpg'">
+    </div>
+
+    <!-- Compiled HTML content -->
+    <article class="blog-article-content bg-glass animate-on-scroll" style="padding: 40px; border-radius: var(--border-radius-md); margin-bottom: 60px;">
+      <%- blog.parsedContent %>
+    </article>
+
+    <!-- Related Articles -->
+    <% if (relatedBlogs.length > 0) { %>
+      <div class="related-section animate-on-scroll" style="border-top: 1px solid var(--border-color); padding-top: 40px;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 30px; font-family: var(--font-heading);">Related Articles</h3>
+        <div class="blog-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+          <% relatedBlogs.forEach(rb => { %>
+            <div class="blog-card bg-glass">
+              <div class="blog-img" style="height: 160px;">
+                <img src="<%= rb.image %>" alt="<%= rb.title %>" onerror="this.src='/images/blog-placeholder.jpg'">
+              </div>
+              <div class="blog-card-content" style="padding: 20px;">
+                <h4 style="font-size: 1.1rem; line-height: 1.35; margin-bottom: 10px;"><%= rb.title %></h4>
+                <a href="/blog/<%= rb.id %>" class="project-link" style="font-size: 0.85rem;">
+                  Read Article <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

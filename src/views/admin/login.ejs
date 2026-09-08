@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS Login | Evance Dionis Portfolio</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+</head>
+<body class="login-body">
+
+  <div class="login-card">
+    <div class="login-header">
+      <div style="font-size: 3rem; color: var(--color-primary); margin-bottom: 15px;"><i class="bi bi-shield-lock"></i></div>
+      <h2>Evance Dionis CMS</h2>
+      <p>Secure authentication portal for site management</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="login-error">
+        <i class="bi bi-exclamation-triangle"></i> <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/admin/login" method="POST">
+      <div class="admin-form-group">
+        <label for="username">Admin Username</label>
+        <input type="text" id="username" name="username" class="admin-input" required placeholder="admin" autofocus>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="password">Security Password</label>
+        <input type="password" id="password" name="password" class="admin-input" required placeholder="••••••••">
+      </div>
+
+      <button type="submit" class="admin-btn">
+        <i class="bi bi-box-arrow-in-right"></i> Authenticate & Login
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 25px;">
+      <a href="/" style="font-size: 0.85rem; color: var(--text-admin-secondary); text-decoration: none;">
+        <i class="bi bi-arrow-left"></i> Return to Homepage
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>

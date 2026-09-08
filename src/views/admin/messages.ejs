@@ -1,0 +1,69 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar', { activeTab: 'messages', title: 'Messages Inbox' }) %>
+
+<div class="data-box" style="margin-bottom: 40px;">
+  <div class="data-box-header">
+    <h3>Client Form Submissions</h3>
+    <span class="badge badge-success"><i class="bi bi-inbox"></i> Inbox Feed</span>
+  </div>
+  
+  <div class="msg-list" style="margin-top: 20px;">
+    <% if (messages.length > 0) { %>
+      <% messages.forEach(msg => { %>
+        <div class="msg-item <%= msg.status === 'unread' ? 'unread' : '' %>" id="msg-<%= msg.id %>">
+          <div class="msg-item-header" style="align-items: center;">
+            <h4 style="font-size: 1.1rem;"><%= msg.name %></h4>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge <%= msg.status === 'unread' ? 'badge-warning' : 'badge-success' %>"><%= msg.status %></span>
+              <span style="font-size: 0.75rem; color: var(--text-admin-muted);"><%= new Date(msg.created_at).toLocaleString() %></span>
+            </div>
+          </div>
+          
+          <div style="margin: 10px 0; font-size: 0.85rem; color: var(--text-admin-secondary); display: flex; flex-wrap: wrap; gap: 20px;">
+            <span><i class="bi bi-envelope"></i> Barua Pepe: <a href="mailto:<%= msg.email %>" style="color: var(--color-primary); text-decoration: underline;"><%= msg.email %></a></span>
+            <% if (msg.phone) { %>
+              <span><i class="bi bi-telephone"></i> Simu: <a href="tel:<%= msg.phone %>" style="color: var(--text-admin-secondary);"><%= msg.phone %></a></span>
+            <% } %>
+          </div>
+          
+          <div class="msg-item-body" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.02);">
+            <%= msg.message %>
+          </div>
+          
+          <div class="msg-actions" style="margin-top: 15px; justify-content: space-between; align-items: center;">
+            <div style="display: inline-flex; gap: 10px;">
+              <% if (msg.status === 'unread') { %>
+                <button class="admin-btn mark-read-btn" data-id="<%= msg.id %>" style="padding: 6px 12px; font-size: 0.8rem; background: var(--color-success);">
+                  <i class="bi bi-check-lg"></i> Mark as Read
+                </button>
+              <% } %>
+              
+              <a href="mailto:<%= msg.email %>?subject=Reply%20from%20Evance%20Dionis&body=Hi%20<%= encodeURIComponent(msg.name) %>," class="admin-btn" style="padding: 6px 12px; font-size: 0.8rem; background: var(--color-primary); text-decoration: none;">
+                <i class="bi bi-reply"></i> Reply by Email
+              </a>
+              
+              <% if (msg.phone) { %>
+                <a href="https://wa.me/<%= msg.phone.replace(/[^0-9]/g, '') %>" target="_blank" class="admin-btn" style="padding: 6px 12px; font-size: 0.8rem; background: #25d366; text-decoration: none;">
+                  <i class="bi bi-whatsapp"></i> Reply by WhatsApp
+                </a>
+              <% } %>
+            </div>
+
+            <form action="/admin/messages/delete/<%= msg.id %>" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this message?');">
+              <button type="submit" class="admin-btn" style="padding: 6px 12px; background: var(--color-danger); font-size: 0.8rem;">
+                <i class="bi bi-trash"></i> Delete Message
+              </button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div style="text-align: center; padding: 60px 20px; color: var(--text-admin-muted);">
+        <i class="bi bi-envelope-open" style="font-size: 3rem; display: block; margin-bottom: 15px;"></i>
+        <p>No messages received yet. When users submit the contact form, their queries will appear here.</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
