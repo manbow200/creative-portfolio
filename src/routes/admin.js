@@ -54,7 +54,15 @@ async function logActivity(action, details = '') {
 
 // Admin Login Page
 router.get('/login', (req, res) => {
-  if (req.session && req.session.isAdmin) {
+  const cookies = auth.parseCookies(req.headers.cookie);
+  const token = cookies.admin_auth_token;
+  const validUsername = auth.verifyToken(token);
+
+  if ((req.session && req.session.isAdmin) || validUsername) {
+    if (validUsername && req.session) {
+      req.session.isAdmin = true;
+      req.session.username = validUsername;
+    }
     return res.redirect('/admin');
   }
   res.render('admin/login', { error: null });
@@ -72,6 +80,16 @@ router.post('/login', async (req, res) => {
       if (match) {
         req.session.isAdmin = true;
         req.session.username = user.username;
+
+        // Set persistent HTTP-only auth token for Vercel serverless session persistence
+        const token = auth.generateToken(user.username);
+        res.cookie('admin_auth_token', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
         await logActivity('Admin Login', `User '${username}' logged in successfully.`);
         return res.redirect('/admin');
       }
@@ -87,6 +105,7 @@ router.post('/login', async (req, res) => {
 router.get('/logout', async (req, res) => {
   const user = req.session?.username || 'unknown';
   await logActivity('Admin Logout', `User '${user}' logged out.`);
+  res.clearCookie('admin_auth_token');
   req.session.destroy(() => {
     res.redirect('/admin/login');
   });
