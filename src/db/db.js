@@ -94,8 +94,13 @@ class DatabaseAdapter {
     } else {
       return new Promise((resolve, reject) => {
         this.connection.run(sql, params, function(err) {
-          if (err) reject(err);
-          else {
+          if (err) {
+            if (err.code === 'SQLITE_READONLY' || (err.message && err.message.includes('readonly'))) {
+              console.warn('SQLite write operation skipped (read-only filesystem on Vercel):', err.message);
+              return resolve({ insertId: 0, changes: 0 });
+            }
+            reject(err);
+          } else {
             resolve({
               insertId: this.lastID,
               changes: this.changes
